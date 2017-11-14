@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge">
+    <meta name="description" content="电池组" />
+    <meta name="keywords" content="电池组" />
+    <title>运行参数曲线</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/mui.min.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div id="wrapDiv" class="container" style="padding: 0px;">
+        <p id="title_p">工况查询</p>
+        <div id="selectDiv" style="margin-top: 15px;border: 1px solid #ffffff;padding: 5px;">
+            <label class="checkbox-inline">
+                <div>
+                    <span style="color: #ffffff">时间:</span>
+                    <input class="text-center" style="width: 40%;height: 25px;display: inline;border: 1px solid #cccccc" type="text" id="test1">~
+                    <input class="text-center" style="width: 40%;height: 25px;display: inline;border: 1px solid #cccccc" type="text" id="test2">
+                </div>
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="inlineCheckbox1" value="option1" checked="checked">伸缩油缸大腔压力
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="inlineCheckbox2" value="option2" checked="checked">变幅油缸大腔压力
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="inlineCheckbox3" value="option3" checked="checked">吊臂角度
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="inlineCheckbox4" value="option3" checked="checked">吊臂长度
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="inlineCheckbox5" value="option3">液压系统油温
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="inlineCheckbox6" value="option3">吊重量
+            </label>
+            <button type="button" class="btn btn-default" style="margin-left: 20px;">查询</button>
+        </div>
+    </div>
+    <div id="ColumnDiv1"></div>
+
+<script src="js/jquery-2.0.3.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/echarts.js"></script>
+<script src="js/laydate/laydate.js"></script>
+<script src="js/respond.js"></script>
+<script>
+    var timeDate=[];
+    //执行一个laydate实例
+    laydate.render({
+        elem: '#test1', //指定元素
+        type: "datetime",
+        format: 'yyyy-MM-dd HH:mm'
+    });
+    laydate.render({
+        elem: '#test2', //指定元素
+        type: "datetime",
+        format: 'yyyy-MM-dd HH:mm'
+    });
+
+    $(function () {
+        setPage();
+    });
+    $(window).resize(function() {
+        setPage();
+    });
+    function  setPage() {
+        $("body").css("width",$(window).width()+"px");
+        $("body").css("height",$(window).height()+"px");
+        $('#ColumnDiv1').css("width",$(window).width()+"px");
+        $('#ColumnDiv1').css("height",$(window).height()-$('#wrapDiv').height()-60+"px");
+        $('#ColumnDiv1').css("top","20px");
+
+        var date = new Date();
+        for(var i=0;i<30;i++){
+            var n = new Date(date.getTime() - i*1000 * 60);
+            var formatDate=Format(n,"yyyy-MM-dd HH:mm");
+            timeDate.push(formatDate);
+        }
+        timeDate = timeDate.reverse();
+
+        $('#test1').val(timeDate[0]);
+        $('#test2').val(timeDate[29]);
+
+        ColumnDiv1 = echarts.init(document.getElementById('ColumnDiv1'));
+
+        option = {
+            color: ['#d28367', '#c3362f', '#659ab0', '#dbd977'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    animation: false,
+                    label: {
+                        backgroundColor: '#0D4286'
+                    }
+                }
+            },
+            legend: {
+                left: 'center',
+//                right:0,
+//                orient:'vertical',
+                data: ['伸缩油缸大腔压力', '变幅油缸大腔压力', '吊臂角度', '吊臂长度'],
+                textStyle: {
+                    color: "#ffffff",
+                    fontsize: 5
+                }
+            },
+            grid:{
+                bottom:90,
+            },
+            xAxis:  {
+                type: 'category',
+                boundaryGap: false,
+//                data: ["2017-10-30 15:01","2017-10-30 15:02","2017-10-30 15:03","2017-10-30 15:04","2017-10-30 15:05","2017-10-30 15:06","2017-10-30 15:07","2017-10-30 15:08","2017-10-30 15:09","2017-10-30 15:10","2017-10-30 15:11","2017-10-30 15:12","2017-10-30 15:13","2017-10-30 15:14","2017-10-30 15:15","2017-10-30 15:16","2017-10-30 15:17","2017-10-30 15:18","2017-10-30 15:19","2017-10-30 15:20","2017-10-30 15:21","2017-10-30 15:22","2017-10-30 15:23","2017-10-30 15:24","2017-10-30 15:25","2017-10-30 15:26","2017-10-30 15:27","2017-10-30 15:28","2017-10-30 15:29","2017-10-30 15:30"],
+                data:timeDate,
+                axisLabel:{
+                    interval:0,
+                    rotate:-50,
+                    height:100,
+                    textStyle:{
+                        color:'#ffffff'
+                    }
+                },
+                nameGap:0,
+                axisLine:{
+                    lineStyle:{
+                        color:'#ffffff'
+                    }
+                }
+            },
+            yAxis: [{
+                show:true,
+                boundaryGap: [0, '50%'],
+                axisLine: {
+                    lineStyle: {
+                        color: '#FFFFFF'
+                    }
+                },
+                type: 'value',
+                name: '伸缩油缸大腔(MPa)',
+                nameTextStyle:{
+                    fontSize:11
+                },
+                nameGap:30,
+                position: 'left',
+                offset: 50,
+                splitNumber: 5,
+                axisLabel: {
+                    formatter: '{value}',
+                    textStyle: {
+                        color: '#FFFFFF'
+                    }
+                },
+                splitLine: {
+                    show: false
+                }
+            }, {
+                show:true,
+                boundaryGap: [0, '50%'],
+                axisLine: {
+                    lineStyle: {
+                        color: '#FFFFFF'
+                    }
+                },
+                splitLine: {
+                    show: false,
+                },
+                type: 'value',
+                name: '变幅油缸大腔压力(MPa)',
+                nameTextStyle:{
+                    fontSize:11
+                },
+                position: 'left',
+                axisLabel: {
+                    formatter: '{value}'
+                }
+            }, {
+                show:true,
+                boundaryGap: [0, '50%'],
+                axisLine: {
+                    lineStyle: {
+                        color: '#FFFFFF'
+                    }
+                },
+                splitLine: {
+                    show: true
+                },
+                type: 'value',
+                name: '吊臂角度(°)',
+                position: 'right',
+                axisTick: {
+                    inside: 'false',
+                    length: 10
+                }
+            },{
+                show:true,
+                name: '吊臂长度(m)',
+                nameGap:30,
+                boundaryGap: [0, '50%'],
+                offset: 50,
+                axisLine: {
+                    lineStyle: {
+                        color: '#FFFFFF'
+                    }
+                },
+                splitLine: {
+                    show: true
+                },
+                type: 'value',
+                position: 'right',
+                axisTick: {
+                    inside: 'false',
+                    length: 10
+                }
+            }],
+            series: [{
+                name: '伸缩油缸大腔压力',
+                type: 'line',
+                data: [69, 23, 80, 63, 88, 30, 85, 51,94, 44,69, 23, 80, 63, 88, 30, 85, 51,94, 44,69, 23, 80, 63, 88, 30, 85, 51,94, 44,],
+                yAxisIndex: 0
+            }, {
+                name: '变幅油缸大腔压力',
+                type: 'line',
+                data: [2, 7, 10, 5, 6,3,3, 5, 6, 2,2, 7, 10, 5, 6,3,3, 5, 6, 2,2, 7, 10, 5, 6,3,3, 5, 6, 2],
+                yAxisIndex: 1
+            }, {
+                name: '吊臂角度',
+                type: 'line',
+                data: [94, 44, 69, 23, 80, 63, 88, 30, 85, 51,94, 44, 69, 23, 80, 63, 88, 30, 85, 51,94, 44, 69, 23, 80, 63, 88, 30, 85, 51],
+                yAxisIndex: 2
+            }, {
+                name: '吊臂长度',
+                type: 'line',
+                data: [2, 7, 10, 5, 6,3,3, 5, 6, 2,2, 7, 10, 5, 6,3,3, 5, 6, 2,2, 7, 10, 5, 6,3,3, 5, 6, 2],
+                yAxisIndex: 3
+            }]
+        };
+
+        ColumnDiv1.setOption(option);
+    }
+
+    //日期格式化  调用示例  var formatDate=Format(d,"yyyy-MM-dd HH:mm:ss");
+    function Format(now,mask)
+    {
+        var d = now;
+        var zeroize = function (value, length)
+        {
+            if (!length) length = 2;
+            value = String(value);
+            for (var i = 0, zeros = ''; i < (length - value.length); i++)
+            {
+                zeros += '0';
+            }
+            return zeros + value;
+        };
+
+        return mask.replace(/"[^"]*"|'[^']*'|\b(?:d{1,4}|m{1,4}|yy(?:yy)?|([hHMstT])\1?|[lLZ])\b/g, function ($0)
+        {
+            switch ($0)
+            {
+                case 'd': return d.getDate();
+                case 'dd': return zeroize(d.getDate());
+                case 'ddd': return ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat'][d.getDay()];
+                case 'dddd': return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][d.getDay()];
+                case 'M': return d.getMonth() + 1;
+                case 'MM': return zeroize(d.getMonth() + 1);
+                case 'MMM': return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getMonth()];
+                case 'MMMM': return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][d.getMonth()];
+                case 'yy': return String(d.getFullYear()).substr(2);
+                case 'yyyy': return d.getFullYear();
+                case 'h': return d.getHours() % 12 || 12;
+                case 'hh': return zeroize(d.getHours() % 12 || 12);
+                case 'H': return d.getHours();
+                case 'HH': return zeroize(d.getHours());
+                case 'm': return d.getMinutes();
+                case 'mm': return zeroize(d.getMinutes());
+                case 's': return d.getSeconds();
+                case 'ss': return zeroize(d.getSeconds());
+                case 'l': return zeroize(d.getMilliseconds(), 3);
+                case 'L': var m = d.getMilliseconds();
+                    if (m > 99) m = Math.round(m / 10);
+                    return zeroize(m);
+                case 'tt': return d.getHours() < 12 ? 'am' : 'pm';
+                case 'TT': return d.getHours() < 12 ? 'AM' : 'PM';
+                case 'Z': return d.toUTCString().match(/[A-Z]+$/);
+                // Return quoted strings with the surrounding quotes removed
+                default: return $0.substr(1, $0.length - 2);
+            }
+        });
+    };
+
+</script>
+</body>
+</html>

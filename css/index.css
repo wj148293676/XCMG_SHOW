@@ -1,0 +1,50 @@
+body{
+    background: url("../image/BG.jpg") no-repeat;
+    background-size:cover;
+    filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";
+    background-size:100% 100%;
+    -webkit-background-size:100% 100%;
+    -moz-background-size:100% 100%;
+    padding-top: 20px;
+}
+#title_p{
+    border: 1px solid #0058dd;
+    display: inline;
+    font: 30px '微软雅黑';
+    color: #fff;
+    padding: 10px 20px;
+}
+
+#test1,#test2{
+    color: #000000;
+}
+.checkbox-inline{
+    color: #ffffff;
+}
+table{
+    font-size: 13px;
+}
+table p{
+    font-size: 13px;
+    line-height: 25px;
+}
+.table-bordered{
+    border:1px solid #ffffff
+}
+table tbody tr td{
+    padding: 0px;
+}
+table p{
+    padding-right: 10px;
+}
+table select{
+    width: 50%;
+    height: 25px;
+    margin: 0px;
+}
+.checkbox-inline{
+    font-size: 13px;
+}
+#ColumnDiv1{
+    width: 100%;
+}
